@@ -35,6 +35,8 @@ erDiagram
         text reason
     }
 ```
+
+
 ⚙️ การตั้งค่าและรันโปรเจค (Installation & Setup)
 1. การรัน Backend (Express.js)
 Bash
@@ -49,6 +51,8 @@ cd frontend
 npm install
 # ตั้งค่า environment.ts ให้ชี้ไปยัง Backend API
 ng serve
+
+
 ## 🧪 Unit Testing & Quality
 เพื่อให้ระบบมีความเสถียรระดับ Production เราได้เลือกใช้เครื่องมือทดสอบดังนี้:
 - **Frontend**: ใช้ Jasmine/Karma ทดสอบการทำงานของ Auth Guard และ API Service (CRUD Operations)
