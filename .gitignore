@@ -29,8 +29,8 @@ dist/
 !.vscode/mcp.json
 .history/*
 
-# Production secrets
-frontend/src/environments/environment.prod.ts
+# Production secrets (Uncommented for direct URL sync as requested)
+# frontend/src/environments/environment.prod.ts
 backend/.env
 
 # System files

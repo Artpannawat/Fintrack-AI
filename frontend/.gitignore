@@ -49,4 +49,4 @@ Thumb.db
 .env
 .env.local
 .env.*.local
-src/environments/environment.prod.ts
+# src/environments/environment.prod.ts
