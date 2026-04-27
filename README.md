@@ -8,8 +8,14 @@ FinTrack-AI เป็นแอปพลิเคชันที่ใช้ AI (
 - **Frontend (Vercel):** [https://fintrack-ai-nine-ruddy.vercel.app/](https://fintrack-ai-nine-ruddy.vercel.app/)
 - **Backend API (Render):** [https://fintrack-backend-wnza.onrender.com](https://fintrack-backend-wnza.onrender.com)
 
----
+--- 
 
+## 🛠️ Tech Stack
+- **Frontend:** Angular 17 (Signals, Tailwind CSS, Lucide Icons)
+- **Backend:** Node.js, Express.js
+- **AI Engine:** Google Gemini 2.0 Flash (Strict JSON Mode)
+- **Database:** Supabase (PostgreSQL)
+- **Authentication:** Google OAuth 2.0
 ## 📊 Database Schema (ER-Diagram)
 - **auth.users**: ระบบสมาชิก (Google OAuth)
 - **public.transactions**: เก็บข้อมูลรายรับ-รายจ่าย [id, user_id, amount, category, date, verdict, reason]
@@ -29,9 +35,20 @@ erDiagram
         text reason
     }
 ```
-
+⚙️ การตั้งค่าและรันโปรเจค (Installation & Setup)
+1. การรัน Backend (Express.js)
+Bash
+cd backend
+npm install
+# สร้างไฟล์ .env กำหนด PORT, GEMINI_API_KEY, และ FRONTEND_URL
+npm start
 ---
-
+2. การรัน Frontend (Angular 17)
+Bash
+cd frontend
+npm install
+# ตั้งค่า environment.ts ให้ชี้ไปยัง Backend API
+ng serve
 ## 🧪 Unit Testing & Quality
 เพื่อให้ระบบมีความเสถียรระดับ Production เราได้เลือกใช้เครื่องมือทดสอบดังนี้:
 - **Frontend**: ใช้ Jasmine/Karma ทดสอบการทำงานของ Auth Guard และ API Service (CRUD Operations)
