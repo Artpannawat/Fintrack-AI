@@ -29,17 +29,17 @@ app.get('/', (req, res) => {
     res.json({ message: '🚀 FinTrack-AI Backend is running!' });
 });
 
-app.get('/api/health', (req, res) => {
+app.get(['/api/health', '/health'], (req, res) => {
     res.json({ status: 'API is ONLINE', path: req.path });
 });
 
-app.get('/api/test', (req, res) => {
+app.get(['/api/test', '/test'], (req, res) => {
     res.send('API is Ready!');
 });
 // นำเข้าบริการ AI
 const { aiService } = require('./src/services/ai-service');
 
-app.post('/api/analyze-transaction', async (req, res) => {
+app.post(['/api/analyze-transaction', '/analyze-transaction'], async (req, res) => {
     try {
         const { description, amount, category } = req.body;
         
@@ -55,8 +55,8 @@ app.post('/api/analyze-transaction', async (req, res) => {
     }
 });
 
-// Behavior Analysis - explicit POST route
-app.post('/api/analyze-behavior', async (req, res) => {
+// Behavior Analysis - explicit POST route (Dual path for robustness)
+app.post(['/api/analyze-behavior', '/analyze-behavior'], async (req, res) => {
     console.log('--- AI Behavior Route Hit! ---');
     const ip = req.ip || req.socket.remoteAddress;
     const timestamp = new Date().toLocaleTimeString('th-TH');
