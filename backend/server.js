@@ -55,6 +55,10 @@ app.get('/api/health', (req, res) => {
     });
 });
 
+app.get('/api/test', (req, res) => {
+    res.send('API is Ready!');
+});
+
 // นำเข้าบริการ AI
 const { aiService } = require('./src/services/ai-service');
 
