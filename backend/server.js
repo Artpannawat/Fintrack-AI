@@ -78,8 +78,8 @@ app.post('/api/analyze-transaction', async (req, res) => {
     }
 });
 
-// Behavior Analysis - with rate limiting
-app.post('/api/analyze-behavior', aiLimiter, async (req, res) => {
+// Behavior Analysis - explicit POST route
+app.post('/api/analyze-behavior', async (req, res) => {
     console.log('--- AI Behavior Route Hit! ---');
     const ip = req.ip || req.socket.remoteAddress;
     const timestamp = new Date().toLocaleTimeString('th-TH');
@@ -100,6 +100,16 @@ app.post('/api/analyze-behavior', aiLimiter, async (req, res) => {
         console.error('Behavior Analysis Error:', error);
         res.status(500).json({ error: 'Failed to analyze behavior' });
     }
+});
+
+// Catch-all route to debug 404s
+app.use((req, res) => {
+    console.warn(`[404] No route matched for ${req.method} ${req.url}`);
+    res.status(404).json({ 
+        error: 'Route not found', 
+        requestedPath: req.path,
+        requestedMethod: req.method 
+    });
 });
 
 // เริ่มรันเซิร์ฟเวอร์ (เฉพาะเมื่อรันโดยตรง ไม่ใช่ผ่าน Vercel)
