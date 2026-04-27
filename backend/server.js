@@ -50,6 +50,10 @@ app.get('/', (req, res) => {
     res.json({ message: '🚀 FinTrack-AI Backend is running!' });
 });
 
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // นำเข้าบริการ AI
 const { aiService } = require('./src/services/ai-service');
 
