@@ -1,0 +1,50 @@
+<div class="glass-panel">
+  <h3 class="panel-title">Add Transaction</h3>
+  
+  <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()" class="glass-form">
+    
+    <div class="form-group">
+      <label>Type</label>
+      <div class="type-toggles">
+        <label class="radio-btn income" [class.active]="transactionForm.get('type')?.value === 'income'">
+          <input type="radio" formControlName="type" value="income"> Income
+        </label>
+        <label class="radio-btn expense" [class.active]="transactionForm.get('type')?.value === 'expense'">
+          <input type="radio" formControlName="type" value="expense"> Expense
+        </label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="amount">Amount</label>
+      <input type="number" id="amount" formControlName="amount" placeholder="0.00" class="glass-input">
+      <div *ngIf="transactionForm.get('amount')?.touched && transactionForm.get('amount')?.hasError('required')" class="error-text">
+        Amount is required.
+      </div>
+      <div *ngIf="transactionForm.get('amount')?.touched && transactionForm.get('amount')?.hasError('min')" class="error-text">
+        Amount must be greater than 0.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="category">Category</label>
+      <select id="category" formControlName="category" class="glass-input">
+        <option value="" disabled selected>Select category</option>
+        <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+      </select>
+      <div *ngIf="transactionForm.get('category')?.touched && transactionForm.get('category')?.hasError('required')" class="error-text">
+        Category is required.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <input type="text" id="description" formControlName="description" placeholder="Short description..." class="glass-input">
+    </div>
+
+    <button type="submit" class="btn-glow" [disabled]="isLoading() || transactionForm.invalid">
+      <span *ngIf="isLoading()" class="spinner"></span>
+      {{ isLoading() ? 'AI is judging your life choices...' : 'Add Transaction' }}
+    </button>
+  </form>
+</div>

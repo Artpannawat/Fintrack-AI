@@ -1,0 +1,180 @@
+<div class="container">
+  <h2>Financial Overview</h2>
+
+  <!-- Skeleton Loader -->
+  <div *ngIf="isLoading()" class="skeleton-page">
+    <div class="skeleton-row sk-title"></div>
+    <div class="skel-cards">
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+    </div>
+    <div class="skeleton-card sk-tall"></div>
+  </div>
+
+  <div *ngIf="!isLoading()" class="dashboard-grid">
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+      <div class="card summary-card balance">
+        <h3>Total Balance</h3>
+        <p class="amount" [ngClass]="{'text-green': totalBalance() && !totalBalance().startsWith('-'), 'text-red': totalBalance() && totalBalance().startsWith('-')}">{{ totalBalance() }}</p>
+      </div>
+      
+      <div class="card summary-card income">
+        <div class="card-header">
+          <h3>Income</h3>
+          <lucide-icon [img]="ArrowUpRight" class="text-green"></lucide-icon>
+        </div>
+        <p class="amount text-green">{{ income() }}</p>
+      </div>
+
+      <div class="card summary-card expense">
+        <div class="card-header">
+          <h3>Expenses</h3>
+          <lucide-icon [img]="ArrowDownRight" class="text-red"></lucide-icon>
+        </div>
+        <p class="amount text-red">{{ expenses() }}</p>
+      </div>
+    </div>
+
+    <!-- Add Transaction Form -->
+    <div class="form-section">
+      <app-transaction-form (transactionAdded)="loadTransactions()"></app-transaction-form>
+    </div>
+
+    <!-- Charts & Lists -->
+    <div class="details-grid">
+      <div class="card chart-card">
+        <h3>Expense Breakdown</h3>
+        <div class="chart-container" *ngIf="pieChartData().datasets[0].data.length > 0; else noData">
+          <canvas baseChart
+                  [data]="pieChartData()"
+                  [type]="'pie'"
+                  [options]="pieChartOptions">
+          </canvas>
+        </div>
+        <ng-template #noData>
+          <p class="text-muted text-center py-4">No expenses to display.</p>
+        </ng-template>
+      </div>
+
+      <div class="card recent-transactions">
+        <h3>Recent Transactions</h3>
+
+        <!-- Empty State -->
+        <div *ngIf="transactions().length === 0" class="empty-state">
+          <div class="empty-icon">&#x1F4B8;</div>
+          <p>เริ่มบันทึกรายการแรกเพื่อรับคำด่าจาก AI!</p>
+          <span class="empty-sub">AI พร้อมตัดสินชีวิตคุณแล้ว &#x1F60E;</span>
+        </div>
+
+        <div class="transaction-list">
+          <div *ngFor="let t of transactions() | slice:0:8" class="transaction-item">
+            <div class="tx-info">
+              <h4>{{ t.description }}</h4>
+              <span class="tx-date text-muted">{{ t.date | date:'shortDate' }}</span>
+              <span class="badge verdict-{{ t.verdict }}">{{ t.category }}</span>
+              <p *ngIf="t.reason" class="ai-reason"
+                [class.ai-reason--green]="t.verdict === 'green'"
+                [class.ai-reason--yellow]="t.verdict === 'yellow'"
+                [class.ai-reason--red]="t.verdict === 'red'">
+                &#x1F916; {{ t.reason }}
+              </p>
+            </div>
+            <div class="tx-right">
+              <div class="tx-amount" [ngClass]="{'text-green': t.amount.isPos(), 'text-red': t.amount.isNeg()}">
+                {{ t.amount.isPos() ? '+' : '' }}{{ formatMoney(t.amount) }}
+              </div>
+              <div class="tx-actions">
+                <button class="icon-btn edit-btn" title="แก้ไข" (click)="openEdit(t)">
+                  <lucide-icon [img]="Pencil" [size]="14"></lucide-icon>
+                </button>
+                <button class="icon-btn delete-btn" title="ลบ" (click)="requestDelete(t.id!)">
+                  <lucide-icon [img]="Trash2" [size]="14"></lucide-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Behavior Analysis Panel -->
+    <div class="card ai-panel">
+      <div class="ai-panel__header">
+        <div class="ai-panel__title">
+          <lucide-icon [img]="Brain" class="text-blue"></lucide-icon>
+          <h3>AI Financial Coach</h3>
+        </div>
+        <div class="range-tabs">
+          <button *ngFor="let r of ranges"
+            class="range-tab"
+            [class.active]="selectedRange() === r.key"
+            (click)="setRange(r.key)">
+            {{ r.label }}
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="isAnalyzing()" class="skeleton-wrap">
+        <div class="skeleton skeleton--text"></div>
+        <div class="skeleton skeleton--text short"></div>
+        <div class="skeleton skeleton--text"></div>
+        <p class="skeleton-label">&#x1F916; AI กำลังวิเคราะห์ชีวิตคุณอยู่...</p>
+      </div>
+
+      <div *ngIf="!isAnalyzing() && aiResult()" class="ai-result">
+        <div class="ai-score">
+          <span class="score-num"
+            [class.score-high]="aiResult()!.score >= 70"
+            [class.score-mid]="aiResult()!.score >= 40 && aiResult()!.score < 70"
+            [class.score-low]="aiResult()!.score < 40">
+            {{ aiResult()!.score }}
+          </span>
+          <span class="score-label">/ 100</span>
+          <span *ngIf="aiResult()!.fallback" class="badge-fallback">&#x1F9E0; Smart Tip</span>
+        </div>
+        <p class="ai-summary">{{ aiResult()!.summary }}</p>
+        <ul *ngIf="aiResult()!.tips.length > 0" class="ai-tips">
+          <li *ngFor="let tip of aiResult()!.tips">&#x2728; {{ tip }}</li>
+        </ul>
+      </div>
+
+      <p *ngIf="!isAnalyzing() && !aiResult()" class="ai-empty">
+        เลือกช่วงเวลาแล้วกด "วิเคราะห์" เพื่อให้ AI ด่าคุณแบบสร้างสรรค์ &#x1F60E;
+      </p>
+
+      <button class="btn-glow analyze-btn"
+        (click)="analyzeNow()"
+        [disabled]="isAnalyzing() || cooldownSeconds() > 0">
+        <lucide-icon *ngIf="cooldownSeconds() > 0" [img]="Clock"></lucide-icon>
+        <span *ngIf="isAnalyzing()">AI is reading your soul...</span>
+        <span *ngIf="!isAnalyzing() && cooldownSeconds() > 0">Wait {{ cooldownSeconds() }}s</span>
+        <span *ngIf="!isAnalyzing() && cooldownSeconds() === 0">&#x1F916; Judge Me</span>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Edit Transaction Modal -->
+<app-edit-transaction-modal
+  *ngIf="editTarget()"
+  [transaction]="editTarget()"
+  (close)="editTarget.set(null)"
+  (saved)="loadTransactions()">
+</app-edit-transaction-modal>
+
+<!-- Delete Confirm Dialog -->
+<div *ngIf="confirmDeleteId()" class="modal-overlay confirm-overlay">
+  <div class="confirm-dialog glass-panel">
+    <h4>&#x1F6AE; ยืนยันการลบ?</h4>
+    <p class="confirm-text">รายการนี้จะหายไปตลอดกาล AI จะลืมมันไปด้วย</p>
+    <div class="confirm-actions">
+      <button class="btn-secondary" (click)="cancelDelete()" [disabled]="isDeleting()">ยกเลิก</button>
+      <button class="btn-danger" (click)="confirmDelete()" [disabled]="isDeleting()">
+        {{ isDeleting() ? 'กำลังลบ...' : 'ลบเลย!' }}
+      </button>
+    </div>
+  </div>
+</div>

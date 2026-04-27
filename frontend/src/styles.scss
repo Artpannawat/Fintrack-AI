@@ -1,0 +1,150 @@
+/* ==========================================
+   FinTrack-AI: Global Styles
+   Theme: Deep Blue / Slate (Dark Mode AI)
+   ========================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+// CSS Variables for Theme
+:root {
+  // Color Palette
+  --primary-color: #3b82f6; // Futuristic Blue
+  --primary-hover: #2563eb;
+  --secondary-color: #10b981; // Emerald Green (for positive/green verdict)
+  
+  // Backgrounds (Deep Blue / Slate)
+  --bg-dark: #0f172a; // Slate 900
+  --bg-card: #1e293b; // Slate 800
+  --bg-input: #334155; // Slate 700
+
+  // Typography
+  --text-primary: #f8fafc; // Slate 50
+  --text-secondary: #cbd5e1; // Slate 300
+  --text-muted: #94a3b8; // Slate 400
+
+  // Verdict Colors
+  --verdict-green: #10b981;
+  --verdict-yellow: #f59e0b;
+  --verdict-red: #ef4444;
+
+  // Borders & Shadows
+  --border-color: #334155;
+  --shadow-glow: 0 0 15px rgba(59, 130, 246, 0.3);
+  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+
+  // Transitions
+  --transition-fast: 0.2s ease-in-out;
+}
+
+// Global Reset
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Typography
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+// Layout Utility
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+// Card Utility
+.card {
+  background-color: var(--bg-card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-color);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+
+  &:hover {
+    box-shadow: var(--shadow-glow);
+  }
+}
+
+// Forms & Inputs
+input, select, textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-family: inherit;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+
+  &:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  }
+
+  &::placeholder {
+    color: var(--text-muted);
+  }
+}
+
+// Buttons
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+  
+  &-primary {
+    background-color: var(--primary-color);
+    color: white;
+
+    &:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+  }
+
+  &-outline {
+    background-color: transparent;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+
+    &:hover {
+      background-color: rgba(59, 130, 246, 0.1);
+    }
+  }
+}
+
+// Verdict Badges
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+
+  &.verdict-green { background-color: rgba(16, 185, 129, 0.1); color: var(--verdict-green); border: 1px solid var(--verdict-green); }
+  &.verdict-yellow { background-color: rgba(245, 158, 11, 0.1); color: var(--verdict-yellow); border: 1px solid var(--verdict-yellow); }
+  &.verdict-red { background-color: rgba(239, 68, 68, 0.1); color: var(--verdict-red); border: 1px solid var(--verdict-red); }
+}
