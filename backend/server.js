@@ -16,53 +16,30 @@ const aiLimiter = rateLimit({
   message: { error: 'Rate limit reached. Please wait 10 minutes.', retryAfter: 10 }
 });
 
-// CORS: Allow localhost (dev) + your Vercel domain (prod)
-const allowedOrigins = [
-  'http://localhost:4200',
-  process.env.FRONTEND_URL || ''
-].filter(Boolean);
-
-app.use(cors({
-  origin: (origin, callback) => {
-    // ใน Production req.headers.origin อาจจะเป็น undefined ได้ในบางเคส แต่เบราว์เซอร์ส่วนใหญ่จะส่งมา
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.warn(`[CORS] Blocked request from: ${origin}`);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-}));// Middleware logging for debugging production connection
+app.use(cors()); // Emergency: Open for all origins
 app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} | Path: ${req.path} | Origin: ${req.headers.origin || 'N/A'}`);
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} | Path: ${req.path}`);
     next();
 });
 
 app.use(express.json());
-// API ทดสอบว่าเซิร์ฟเวอร์ทำงานไหม
+
+// Root check
 app.get('/', (req, res) => {
     res.json({ message: '🚀 FinTrack-AI Backend is running!' });
 });
 
-app.get('/api/health', (req, res) => {
-    res.json({ 
-        status: 'API is ONLINE', 
-        path: req.path,
-        timestamp: new Date().toISOString() 
-    });
+app.get('/health', (req, res) => {
+    res.json({ status: 'API is ONLINE', path: req.path });
 });
 
-app.get('/api/test', (req, res) => {
+app.get('/test', (req, res) => {
     res.send('API is Ready!');
 });
-
 // นำเข้าบริการ AI
 const { aiService } = require('./src/services/ai-service');
 
-app.post('/api/analyze-transaction', async (req, res) => {
+app.post('/analyze-transaction', async (req, res) => {
     try {
         const { description, amount, category } = req.body;
         
@@ -79,7 +56,7 @@ app.post('/api/analyze-transaction', async (req, res) => {
 });
 
 // Behavior Analysis - explicit POST route
-app.post('/api/analyze-behavior', async (req, res) => {
+app.post('/analyze-behavior', async (req, res) => {
     console.log('--- AI Behavior Route Hit! ---');
     const ip = req.ip || req.socket.remoteAddress;
     const timestamp = new Date().toLocaleTimeString('th-TH');

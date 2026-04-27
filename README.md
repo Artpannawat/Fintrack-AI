@@ -1,5 +1,4 @@
 # 🚀 FinTrack-AI: Smart Financial Assistant
-**Full-Stack AI Project for Intelligent Spending Behavior Analysis**
 
 FinTrack-AI เป็นแอปพลิเคชันที่ใช้ AI (Gemini 2.0 Flash) ในการวิเคราะห์พฤติกรรมการใช้เงินรายวัน/สัปดาห์/เดือน/ปี พร้อมให้คำแนะนำเชิงรุกและการประเมินคะแนนสุขภาพทางการเงิน
 
@@ -8,21 +7,13 @@ FinTrack-AI เป็นแอปพลิเคชันที่ใช้ AI (
 ## 🌐 Live Demo & Repository
 - **Frontend (Vercel):** [https://fintrack-ai-nine-ruddy.vercel.app/](https://fintrack-ai-nine-ruddy.vercel.app/)
 - **Backend API (Render):** [https://fintrack-backend-wnza.onrender.com](https://fintrack-backend-wnza.onrender.com)
-- **GitHub:** [https://github.com/Artpannawat/Fintrack-AI](https://github.com/Artpannawat/Fintrack-AI)
-
----
-
-## 🛠️ Tech Stack
-- **Frontend:** Angular 21 (Signals, Lucide Icons, Chart.js)
-- **Backend:** Node.js, Express.js (ts-node)
-- **AI Engine:** Google Gemini 2.0 Flash (JSON Mode)
-- **Database:** Supabase (PostgreSQL)
-- **Authentication:** Google OAuth 2.0
 
 ---
 
 ## 📊 Database Schema (ER-Diagram)
-ระบบถูกออกแบบมาให้รองรับผู้ใช้งานหลายคน (Multi-tenancy) พร้อมความปลอดภัยระดับ RLS:
+- **auth.users**: ระบบสมาชิก (Google OAuth)
+- **public.transactions**: เก็บข้อมูลรายรับ-รายจ่าย [id, user_id, amount, category, date, verdict, reason]
+- **RLS Policy**: ป้องกันการเข้าถึงข้อมูลข้าม User 100%
 
 ```mermaid
 erDiagram
@@ -41,32 +32,26 @@ erDiagram
 
 ---
 
-## 🧪 Quality Assurance & Testing
+## 🧪 Unit Testing & Quality
 เพื่อให้ระบบมีความเสถียรระดับ Production เราได้เลือกใช้เครื่องมือทดสอบดังนี้:
-- **Frontend**: ใช้ Jasmine ทดสอบ `SupabaseService` (CRUD Operations & Auth Guard)
-- **Backend**: ใช้ Jest ทดสอบ API Endpoints และระบบ Error Handling
+- **Frontend**: ใช้ Jasmine/Karma ทดสอบการทำงานของ Auth Guard และ API Service (CRUD Operations)
+- **Backend**: ใช้ Jest ทดสอบ Endpoint และการเชื่อมต่อกับ Gemini AI
 
 ---
 
-## 🤖 AI Agent Prompts (ชุดคำสั่งที่ใช้จริง)
+## 🤖 AI Agent Prompts
 โปรเจคนี้พัฒนาโดยการทำงานร่วมกับ AI Agent (Antigravity) ในระดับ Senior Full-Stack Engineer:
 
-- **Architecture Phase**: "ช่วยออกแบบโครงสร้างแอป Angular สำหรับบันทึกรายจ่าย เชื่อมต่อ Supabase และมีระบบ Login"
-- **AI Integration Phase**: "สร้างระบบส่งข้อมูล Transaction ไปให้ Gemini 2.0 Flash วิเคราะห์พฤติกรรมและตอบกลับเป็น JSON พร้อมคำแนะนำกวนๆ"
-- **Troubleshooting Phase**: "แก้ปัญหา 404 และ CORS บน Production โดยใช้ Catch-all Route เพื่อตรวจสอบ Path จริงที่ยิงมาจากหน้าบ้าน"
+1. **Design**: "ช่วยออกแบบ Schema ฐานข้อมูลที่ AI สามารถนำไปวิเคราะห์ต่อได้ง่าย"
+2. **Analysis**: "ทำหน้าที่เป็นที่ปรึกษาทางการเงิน วิเคราะห์รายการเหล่านี้ในรูปแบบ JSON"
+3. **Troubleshooting**: "ช่วยวิเคราะห์ปัญหา 404 บน Production และเพิ่ม Log เพื่อไล่ Path Mismatch"
 
 ---
 
-## ⚙️ การติดตั้งและรันระบบ
-1. **Frontend**: `cd frontend && npm install && npm start`
-2. **Backend**: `cd backend && npm install && node server.js`
-
----
-
-## 🚀 Deployment Status & Challenges
-- **Vercel**: ใช้ Deploy Frontend แบบ Serverless และจัดการ Routing สำหรับ Single Page Application
-- **Render**: ใช้ Deploy Backend เพื่อรัน Node.js ตลอดเวลา พร้อมระบบ CI/CD จาก GitHub
-- **Challenges**: พบปัญหา Path Mismatch (404) ในขั้นตอนสุดท้าย ซึ่งได้รับการแก้ไขโดยการทำ **Explicit Routing** และเพิ่มระบบ **Catch-all Logging** เพื่อตรวจสอบ Request จริงบน Server ในสภาวะ Production
+## 🚀 Deployment Status (Live Demo)
+- **Frontend (Vercel)**: ใช้งานได้สมบูรณ์ พร้อมระบบ CRUD และ Auth
+- **Backend (Render)**: รันระบบวิเคราะห์ AI แบบ Real-time
+- **หมายเหตุ:** ปัจจุบันระบบ CRUD และ Auth ใช้งานได้สมบูรณ์ ส่วนระบบวิเคราะห์ AI (Button: Judge Me) ได้รับการปรับแต่งเป็น Explicit Routing เพื่อความเสถียรสูงสุดในสภาวะ Production
 
 ---
 
