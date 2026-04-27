@@ -41,13 +41,13 @@ erDiagram
 1. การรัน Backend (Express.js)
 Bash
 cd backend && npm install
-# สร้าง .env กำหนด PORT, GEMINI_API_KEY, FRONTEND_URL
+สร้าง .env กำหนด PORT, GEMINI_API_KEY, FRONTEND_URL
 npm start
 ---
 2. การรัน Frontend (Angular 17)
 Bash
 cd frontend && npm install
-# ตั้งค่า environment.ts ชี้ไปยัง Backend API
+ตั้งค่า environment.ts ชี้ไปยัง Backend API
 ng serve
 
 
