@@ -35,23 +35,24 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
-}));
-
-// Middleware logging for debugging production connection
+}));// Middleware logging for debugging production connection
 app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} - Origin: ${req.headers.origin || 'N/A'}`);
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} | Path: ${req.path} | Origin: ${req.headers.origin || 'N/A'}`);
     next();
 });
 
 app.use(express.json());
-
 // API ทดสอบว่าเซิร์ฟเวอร์ทำงานไหม
 app.get('/', (req, res) => {
     res.json({ message: '🚀 FinTrack-AI Backend is running!' });
 });
 
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+    res.json({ 
+        status: 'API is ONLINE', 
+        path: req.path,
+        timestamp: new Date().toISOString() 
+    });
 });
 
 // นำเข้าบริการ AI
