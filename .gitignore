@@ -1,31 +1,38 @@
-# ============================================================
-# FinTrack-AI Root .gitignore
-# SECURITY: Ensure no secrets are committed
-# ============================================================
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+.env
+.env.local
+.env.*.local
 
-# --- Environment / Secrets (NEVER COMMIT) ---
-**/.env
-**/.env.local
-**/.env.*.local
-**/environment.prod.ts
+# Compiled output
+dist/
+/tmp
+/out-tsc
+/bazel-out
+/.angular/cache
 
-# --- Dependencies ---
-**/node_modules/
-
-# --- Build Outputs ---
-**/dist/
-**/.angular/
-
-# --- OS Files ---
-.DS_Store
-Thumbs.db
-
-# --- Logs ---
-*.log
-npm-debug.log*
-yarn-error.log*
-
-# --- IDE ---
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
 .vscode/*
 !.vscode/settings.json
-.idea/
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/mcp.json
+.history/*
+
+# Production secrets
+frontend/src/environments/environment.prod.ts
+backend/.env
+
+# System files
+.DS_Store
+Thumbs.db

@@ -78,7 +78,11 @@ app.post('/api/analyze-behavior', aiLimiter, async (req, res) => {
     }
 });
 
-// เริ่มรันเซิร์ฟเวอร์
-app.listen(PORT, () => {
-    console.log(`✅ Server is running successfully on port ${PORT}`);
-});
+// เริ่มรันเซิร์ฟเวอร์ (เฉพาะเมื่อรันโดยตรง ไม่ใช่ผ่าน Vercel)
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`✅ Server is running successfully on port ${PORT}`);
+    });
+}
+
+module.exports = app;
