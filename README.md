@@ -40,15 +40,11 @@ erDiagram
 ## ⚙️ การตั้งค่าและรันโปรเจค (Installation & Setup)
 1. การรัน Backend (Express.js)
 Bash
-cd backend && npm install
-สร้าง .env กำหนด PORT, GEMINI_API_KEY, FRONTEND_URL
-npm start
+cd backend && npm install && npm start
 
-3. การรัน Frontend (Angular 17)
+2. การรัน Frontend (Angular 17)
 Bash
-cd frontend && npm install
-ตั้งค่า environment.ts ชี้ไปยัง Backend API
-ng serve
+cd frontend && npm install && ng serve
 ---
 
 ## 🧪 Unit Testing & Quality
