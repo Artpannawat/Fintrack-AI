@@ -16,30 +16,30 @@ const aiLimiter = rateLimit({
   message: { error: 'Rate limit reached. Please wait 10 minutes.', retryAfter: 10 }
 });
 
-app.use(cors()); // Emergency: Open for all origins
+app.use(express.json()); // Move to top
+app.use(cors());
 app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} | Path: ${req.path}`);
+    if (req.method === 'POST') console.log('POST Request body:', req.body);
     next();
 });
-
-app.use(express.json());
 
 // Root check
 app.get('/', (req, res) => {
     res.json({ message: '🚀 FinTrack-AI Backend is running!' });
 });
 
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
     res.json({ status: 'API is ONLINE', path: req.path });
 });
 
-app.get('/test', (req, res) => {
+app.get('/api/test', (req, res) => {
     res.send('API is Ready!');
 });
 // นำเข้าบริการ AI
 const { aiService } = require('./src/services/ai-service');
 
-app.post('/analyze-transaction', async (req, res) => {
+app.post('/api/analyze-transaction', async (req, res) => {
     try {
         const { description, amount, category } = req.body;
         
@@ -56,7 +56,7 @@ app.post('/analyze-transaction', async (req, res) => {
 });
 
 // Behavior Analysis - explicit POST route
-app.post('/analyze-behavior', async (req, res) => {
+app.post('/api/analyze-behavior', async (req, res) => {
     console.log('--- AI Behavior Route Hit! ---');
     const ip = req.ip || req.socket.remoteAddress;
     const timestamp = new Date().toLocaleTimeString('th-TH');
