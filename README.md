@@ -37,7 +37,7 @@ erDiagram
 ```
 
 
-⚙️ การตั้งค่าและรันโปรเจค (Installation & Setup)
+## ⚙️ การตั้งค่าและรันโปรเจค (Installation & Setup)
 1. การรัน Backend (Express.js)
 Bash
 cd backend && npm install
