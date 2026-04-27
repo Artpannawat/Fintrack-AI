@@ -24,11 +24,25 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) callback(null, true);
-    else callback(new Error('Not allowed by CORS'));
+    // ใน Production req.headers.origin อาจจะเป็น undefined ได้ในบางเคส แต่เบราว์เซอร์ส่วนใหญ่จะส่งมา
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.warn(`[CORS] Blocked request from: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
   },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
+
+// Middleware logging for debugging production connection
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} - Origin: ${req.headers.origin || 'N/A'}`);
+    next();
+});
+
 app.use(express.json());
 
 // API ทดสอบว่าเซิร์ฟเวอร์ทำงานไหม
