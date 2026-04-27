@@ -29,24 +29,31 @@ app.get('/', (req, res) => {
     res.json({ message: '🚀 FinTrack-AI Backend is running!' });
 });
 
-app.get(['/api/health', '/health'], (req, res) => {
+app.get('/health', (req, res) => {
     res.json({ status: 'API is ONLINE', path: req.path });
 });
 
-app.get(['/api/test', '/test'], (req, res) => {
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'API is ONLINE (legacy)', path: req.path });
+});
+
+app.get('/test', (req, res) => {
     res.send('API is Ready!');
 });
+
+app.get('/api/test', (req, res) => {
+    res.send('API is Ready! (legacy)');
+});
+
 // นำเข้าบริการ AI
 const { aiService } = require('./src/services/ai-service');
 
-app.post(['/api/analyze-transaction', '/analyze-transaction'], async (req, res) => {
+app.post('/analyze-transaction', async (req, res) => {
     try {
         const { description, amount, category } = req.body;
-        
         if (!description || typeof amount !== 'number' || !category) {
             return res.status(400).json({ error: 'Missing required fields: description, amount, category' });
         }
-
         const aiResult = await aiService.analyzeTransaction(description, amount, category);
         res.json(aiResult);
     } catch (error) {
@@ -55,27 +62,37 @@ app.post(['/api/analyze-transaction', '/analyze-transaction'], async (req, res) 
     }
 });
 
-// Behavior Analysis - explicit POST route (Dual path for robustness)
-app.post(['/api/analyze-behavior', '/analyze-behavior'], async (req, res) => {
-    console.log('--- AI Behavior Route Hit! ---');
-    const ip = req.ip || req.socket.remoteAddress;
-    const timestamp = new Date().toLocaleTimeString('th-TH');
-    const { transactions, range } = req.body;
-
-    console.log(`\n[${timestamp}] 🤖 Behavior Analysis Request`);
-    console.log(`   IP: ${ip} | Range: ${range} | Transactions: ${transactions?.length ?? 0}`);
-
+app.post('/api/analyze-transaction', async (req, res) => {
+    // Legacy redirect or handle
     try {
-        if (!transactions || !range) {
-            return res.status(400).json({ error: 'Missing transactions or range' });
-        }
+        const aiResult = await aiService.analyzeTransaction(req.body.description, req.body.amount, req.body.category);
+        res.json(aiResult);
+    } catch (error) { res.status(500).json({ error: 'Failed' }); }
+});
+
+// Behavior Analysis - explicit POST route
+app.post('/analyze-behavior', async (req, res) => {
+    console.log('--- AI Behavior Route Hit! ---');
+    const { transactions, range } = req.body;
+    try {
+        if (!transactions || !range) return res.status(400).json({ error: 'Missing transactions or range' });
         const result = await aiService.analyzeBehavior(transactions, range);
-        const source = result.fallback ? '💡 Static Wisdom' : '🤖 Gemini AI';
-        console.log(`   Result: ${source} | Score: ${result.score}`);
         res.json(result);
     } catch (error) {
         console.error('Behavior Analysis Error:', error);
         res.status(500).json({ error: 'Failed to analyze behavior' });
+    }
+});
+
+app.post('/api/analyze-behavior', async (req, res) => {
+    console.log('--- AI Behavior Route Hit! (Legacy) ---');
+    const { transactions, range } = req.body;
+    try {
+        if (!transactions || !range) return res.status(400).json({ error: 'Missing transactions or range' });
+        const result = await aiService.analyzeBehavior(transactions, range);
+        res.json(result);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed' });
     }
 });
 
