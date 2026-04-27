@@ -43,13 +43,13 @@ Bash
 cd backend && npm install
 สร้าง .env กำหนด PORT, GEMINI_API_KEY, FRONTEND_URL
 npm start
----
-2. การรัน Frontend (Angular 17)
+
+3. การรัน Frontend (Angular 17)
 Bash
 cd frontend && npm install
 ตั้งค่า environment.ts ชี้ไปยัง Backend API
 ng serve
-
+---
 
 ## 🧪 Unit Testing & Quality
 เพื่อให้ระบบมีความเสถียรระดับ Production เราได้เลือกใช้เครื่องมือทดสอบดังนี้:
