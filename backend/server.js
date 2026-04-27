@@ -80,6 +80,7 @@ app.post('/api/analyze-transaction', async (req, res) => {
 
 // Behavior Analysis - with rate limiting
 app.post('/api/analyze-behavior', aiLimiter, async (req, res) => {
+    console.log('--- AI Behavior Route Hit! ---');
     const ip = req.ip || req.socket.remoteAddress;
     const timestamp = new Date().toLocaleTimeString('th-TH');
     const { transactions, range } = req.body;
